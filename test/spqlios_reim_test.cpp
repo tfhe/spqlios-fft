@@ -161,3 +161,48 @@ TEST(fft, reim_vecfft_mul_fma_vs_ref) {
   }
 }
 #endif
+
+#ifdef __x86_64__
+TEST(fft, reim_fft16_ref_vs_naive) {
+  double om[16];
+  double data[32];
+  double datacopy[32];
+  double* omg = om;
+  fill_reim_fft16_omegas(0.25, &omg);
+  ASSERT_EQ(omg - om, 16);
+  for (uint64_t i = 0; i < 16; ++i) {
+    datacopy[i] = data[i] = (rand() % 100) - 50;
+    datacopy[16 + i] = data[16 + i] = (rand() % 100) - 50;
+  }
+  reim_fft16_ref(datacopy, datacopy + 16, om);
+  reim_naive_fft(16, 0.25, data, data + 16);
+  double d = 0;
+  for (uint64_t i = 0; i < 32; ++i) {
+    d += fabs(datacopy[i] - data[i]);
+  }
+  ASSERT_LE(d, 1e-7);
+}
+#endif
+
+TEST(fft, reim_fft16_ref_vs_fma) {
+  double om[16];
+  double data[32];
+  double datacopy[32];
+  for (uint64_t i = 0; i < 16; ++i) {
+    om[i] = (rand() % 100) - 50;
+    datacopy[i] = data[i] = (rand() % 100) - 50;
+    datacopy[16 + i] = data[16 + i] = (rand() % 100) - 50;
+  }
+  reim_fft16_ref(datacopy, datacopy + 16, om);
+  reim_fft16_avx_fma(data, data + 16, om);
+  double d = 0;
+  for (uint64_t i = 0; i < 32; ++i) {
+    d += fabs(datacopy[i] - data[i]);
+  }
+  if (d > 1e-15) {
+    for (uint64_t i = 0; i < 16; ++i) {
+      printf("%ld %lf %lf %lf %lf\n", i, data[i], data[16 + i], datacopy[i], datacopy[16 + i]);
+    }
+    ASSERT_LE(d, 0);
+  }
+}

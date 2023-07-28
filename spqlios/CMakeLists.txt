@@ -36,6 +36,7 @@ set(SRCS_FMA
         reim/reim_ifft_avx2_fma.s
         reim/reim_fft_avx2_fma.s
         reim/reim_fftvec_addmul_fma.s
+        reim/reim_fft16_avx_fma.s
         reim4/reim4_fftvec_addmul_fma.s
         reim4/reim4_fftvec_conv_fma.s
         )

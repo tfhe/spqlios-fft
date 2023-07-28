@@ -35,7 +35,6 @@ EXPORT void reim_from_znx32_avx2_fma(const REIM_FROM_ZNX32_PRECOMP* precomp, voi
 EXPORT void reim_fft_ref(const REIM_FFT_PRECOMP* tables, double* data);
 EXPORT void reim_fft_avx2_fma(const REIM_FFT_PRECOMP* tables, double* data);
 
-
 /**
  * @brief compute the ifft evaluations of P in place
  * ifft(data) = ifft_rec(data, i);
@@ -51,5 +50,16 @@ EXPORT void reim_fft_avx2_fma(const REIM_FFT_PRECOMP* tables, double* data);
 EXPORT void reim_ifft_ref(const REIM_IFFT_PRECOMP* itables, double* data);
 EXPORT void reim_ifft_avx2_fma(const REIM_IFFT_PRECOMP* itables, double* data);
 
+/// new compressed implementation
+
+/** @brief naive FFT code mod X^m-exp(2i.pi.entry_pwr) */
+EXPORT void reim_naive_fft(uint64_t m, double entry_pwr, double* re, double* im);
+
+/** @brief 16-dimensional FFT with precomputed omegas */
+EXPORT void reim_fft16_avx_fma(double* dre, double* dim, const void* omega);
+EXPORT void reim_fft16_ref(double* dre, double* dim, const void* omega);
+
+/** @brief precompute omegas so that reim_fft16 functions */
+EXPORT void fill_reim_fft16_omegas(const double entry_pwr, double** omg);
 
 #endif  // SPQLIOS_REIM_FFT_H

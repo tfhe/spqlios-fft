@@ -11,6 +11,7 @@ EXPORT void reim_fftvec_mul_fma(const REIM_FFTVEC_MUL_PRECOMP* precomp, double* 
 
 EXPORT void reim_fft_avx2_fma(const REIM_FFT_PRECOMP* tables, double* data) { UNDEFINED(); }
 EXPORT void reim_ifft_avx2_fma(const REIM_IFFT_PRECOMP* tables, double* data) { UNDEFINED(); }
+EXPORT void reim_fft16_avx_fma(double* dre, double* dim, const void* omega) { UNDEFINED(); }
 
 EXPORT void reim_fftvec_mul(const REIM_FFTVEC_MUL_PRECOMP* precomp, double* r, const double* a, const double* b) {
   precomp->function(precomp, r, a, b);
