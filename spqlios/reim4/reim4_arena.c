@@ -59,3 +59,39 @@ void reim4_extract_1col_from_reim_vector_avx2(uint64_t m, uint64_t nrows, uint64
     _mm256_storeu_pd(dst_ptr + 4, _mm256_loadu_pd(src_ptr));
   }
 }
+
+// dest should contain: 
+// src[0](col),src[0](col+1),
+// src[1](col),src[1](col+1),
+// src[nrows-1](col),src[nrows-1](col+1)
+// use just scalar code a priori (does not need to be efficient)
+void reim4_extract_2cols_from_reim_vector_ref(uint64_t m, uint64_t nrows, uint64_t col,
+                                              double* dst,  // nrows * 16 doubles
+                                              double** src   // a vector if nrows reim vectors
+) {
+    assert(col + 1 < (m >> 2));
+    double* dst_ptr = dst;
+    for (uint64_t i = 0; i < nrows; ++i, dst_ptr += 8) {
+      const double* src_ptr = src[i] + (col << 2);
+      dst_ptr[0] = src_ptr[0];
+      dst_ptr[1] = src_ptr[1];
+      dst_ptr[2] = src_ptr[2];
+      dst_ptr[3] = src_ptr[3];
+
+      dst_ptr[8] = src_ptr[4];
+      dst_ptr[9] = src_ptr[5];
+      dst_ptr[10] = src_ptr[6];
+      dst_ptr[11] = src_ptr[7];
+
+      src_ptr += m;
+      dst_ptr[4] = src_ptr[0];
+      dst_ptr[5] = src_ptr[1];
+      dst_ptr[6] = src_ptr[2];
+      dst_ptr[7] = src_ptr[3];
+
+      dst_ptr[12] = src_ptr[4];
+      dst_ptr[13] = src_ptr[5];
+      dst_ptr[14] = src_ptr[6];
+      dst_ptr[15] = src_ptr[7];
+    }
+}
