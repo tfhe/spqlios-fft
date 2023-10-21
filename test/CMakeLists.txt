@@ -38,3 +38,15 @@ add_test(NAME spqlios-test COMMAND spqlios-test)
 add_executable(spqlios-cplx-fft-bench spqlios_cplx_fft_bench.cpp)
 target_link_libraries(spqlios-cplx-fft-bench spqlios-fft benchmark pthread)
 target_include_directories(spqlios-cplx-fft-bench PRIVATE ../)
+
+# arena
+add_executable(reim4_arena_bench reim4_arena_bench.cpp)
+target_compile_options(reim4_arena_bench PRIVATE "-march=native")
+target_link_libraries(reim4_arena_bench benchmark spqlios-fft pthread)
+target_include_directories(reim4_arena_bench PRIVATE ../)
+
+
+add_executable(reim4_arena_test reim4_arena_test.cpp)
+target_compile_options(reim4_arena_test PRIVATE "-march=native")
+target_link_libraries(reim4_arena_test ${gtest_libs} spqlios-fft pthread)
+target_include_directories(reim4_arena_test PRIVATE ../ ${test_incs})

@@ -38,6 +38,7 @@ set(SRCS_FMA
         reim/reim_fftvec_addmul_fma.s
         reim4/reim4_fftvec_addmul_fma.s
         reim4/reim4_fftvec_conv_fma.s
+        reim4/reim4_arena.c
         )
 set_source_files_properties(${SRCS_FMA} PROPERTIES COMPILE_OPTIONS "-mfma;-mavx;-mavx2")
 
